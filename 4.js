@@ -13,9 +13,22 @@ const showText = function() {
 }();
 
 // --------------- Solo puedes tocar desde aquí ------------- //
-showText.text = 'Hola';
-showText2 = showText;
-showText2.text = 'Adiós';
+firstSaludo = "Hola";
+
+showText.text = firstSaludo;
+//showText.init();
+
+const showText2 = showText.text == firstSaludo ? function() {
+  return {
+    text: 'Adiós',
+    init: function() {
+      return console.log(this.text);
+    }
+  }
+}() : '';
+
+//showText2.text = 'Adiós';
+//showText2.init();
 // --------------- hasta aquí ------------------------------- //
 
 showText.init();  // Hola

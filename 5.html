@@ -1,16 +1,125 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ejercicio 5</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 </head>
-<body>
-    <article>
-        <h1>Listado de usuarios</h1>
-        <p>Queremos mostrar el listado de usarios que existen en nuestro sistema y que al hacer click sobre uno de ellos nos muestre la información del usuario.</p>
-        <p>Para obtener el listado de usuarios el backend nos ha proporcionado el siguiente endpoint <a href="https://jsonplaceholder.typicode.com/users" target="_blank">Users</a>.</p>
-    </article>
+
+<body class="bg-dark">
+
+    <div class="container">
+
+        <article class="text-white">
+            <h1>Listado de usuarios</h1>
+            <p>Queremos mostrar el listado de usarios que existen en nuestro sistema y que al hacer click sobre uno de
+                ellos
+                nos muestre la información del usuario.</p>
+            <p>Para obtener el listado de usuarios el backend nos ha proporcionado el siguiente endpoint <a
+                    href="https://jsonplaceholder.typicode.com/users" target="_blank">Users</a>.</p>
+        </article>
+        
+        <!-- 
+            * me hubise gustado realizar todos ejercicios en vue (principalmente me siento comodo) :( pero no se si se podia 
+            * le comparto mi cv donde con problemas reales me acomodo mas desarrollarlos de la mejor manera
+            * me sinto comodo trabajndo como back con laravel y con front eh trabajo con vue2 js, jetstream ...
+            * espero puedan darme una oportunidad
+            * cv: https://my.cvonline.me/@roberto-carlos-loaeza-miguel 
+        -->
+
+        <div class="accordion accordion-flush" id="container-users"></div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+
+    <script>
+
+        const loadUsers = async () => {
+            // consumimos el api
+            const response = await axios.get(
+                `https://jsonplaceholder.typicode.com/users`
+            );
+            const users = await response.data;
+
+            console.log(users);
+            let detailUser = ``;
+
+            // pintamos en donde o como queramos mostrar la info de cada usuario
+            users.forEach((user, index) => {
+                detailUser += `
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-heading${ user.id }">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapse${ user.id }" aria-expanded="false" aria-controls="flush-collapse${ user.id }">
+                                #${ user.id } ${ user.name }
+                                <small class="badge bg-light fw-bold text-dark ms-1">phone: ${ user.phone }</small>
+                            </button>
+                        </h2>
+                        <div id="flush-collapse${ user.id }" class="accordion-collapse collapse" aria-labelledby="flush-heading${ user.id }"
+                            data-bs-parent="#container-users">
+                            <div class="accordion-body">
+                                <ul class="list-group list-group-horizontal shadow-sm p-3 mb-5 bg-body rounded">
+                                    <li class="list-group-item text-center">
+                                        <span class="badge bg-success fw-bold">Username</span>
+                                        <hr>
+                                        ${ user.username }
+                                    </li>
+                                    <li class="list-group-item text-center">
+                                        <span class="badge bg-success fw-bold">Email</span>
+                                        <hr>
+                                        ${ user.email }
+                                    </li>
+                                    <li class="list-group-item text-center">
+                                        <span class="badge bg-success fw-bold">Website</span>
+                                        <hr>
+                                        ${ user.website }
+                                    </li>
+                                    <li class="list-group-item text-center">
+                                        <span class="badge bg-success fw-bold">Address</span>
+                                        <hr>
+                                        ${ getAddress(user.address) }
+                                    </li>
+                                    <li class="list-group-item text-center">
+                                        <span class="badge bg-success fw-bold">Company</span>
+                                        <hr>
+                                        ${ getCompany(user.company) }
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('container-users').innerHTML = detailUser;
+        };
+
+        // funcion para formatear la direccion
+        function getAddress(address){
+            return address.zipcode + ', ' + address.city + ', ' + address.suite + ', ' + address.street;
+        }
+
+        // funcion para formatear la empresa
+        function getCompany(company){
+            return company.name + ', ' + company.catchPhrase + ', ' + company.bs;
+        }
+
+        // cargamos los users al iniciar la pagina
+        window.addEventListener("load", function () {
+            loadUsers();
+        });
+    </script>
+
 </body>
+
 </html>
